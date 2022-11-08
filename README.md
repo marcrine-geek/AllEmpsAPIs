@@ -15,5 +15,9 @@ Endpoints for allemps apllication
     python3 -m pip install Flask
 ## run the server
 - flask run
-## Registration API
-POST API/signup
+## Setting up postgresql
+- pip install Flask psycopg2-binary
+- pip install Flask-SQLAlchemy
+- pip install Flask-Migrate
+- pip freeze > requirements.txt
+
