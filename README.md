@@ -9,8 +9,8 @@ Endpoints for allemps apllication
 - navigate to project directory
     cd AllEmpsAPIs
 - virtual environment activation
-    virtualenv .
-    source bin/activate
+    virtualenv venv
+    source venv/bin/activate
 - Install flask in the environment
     python3 -m pip install Flask
 ## run the server
