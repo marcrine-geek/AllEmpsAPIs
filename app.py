@@ -11,7 +11,6 @@ import jwt
 import re
 import datetime
 import functools
-from backend.models import AdminModel, Telegram
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 from time import gmtime, strftime
