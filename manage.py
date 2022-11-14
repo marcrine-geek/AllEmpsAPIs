@@ -3,8 +3,6 @@ from config import DevelopmentConfig
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from db import db
-from backend.models import UserModel
-
 from app import app
 
 app.config.from_object(DevelopmentConfig)
