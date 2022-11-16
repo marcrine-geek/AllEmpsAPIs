@@ -16,7 +16,7 @@ class UserModel(BaseClass, db.Model):
     image = db.Column(db.LargeBinary)
     registered_on = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, firstname, lastname, username, location, email,password, image):
+    def __init__(self, firstname, lastname, username, email, password):
         now = datetime.now()
         self.registered_on = now.strftime("%Y-%m-%d %H:%M:%S")
         self.firstname = firstname
@@ -24,5 +24,3 @@ class UserModel(BaseClass, db.Model):
         self.username = username
         self.email = email
         self.password = password
-        self.location = location
-        self.image = image

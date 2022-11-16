@@ -14,8 +14,8 @@ Endpoints for allemps apllication
 - Install flask in the environment
     python3 -m pip install Flask
 ## run the server
-- flask run
-## Setting up postgresql
+- python3 app.py
+## additional requirements
 - pip install Flask==1.1.4
 - pip install Flask psycopg2-binary
 - pip install Flask-SQLAlchemy
@@ -31,3 +31,7 @@ Endpoints for allemps apllication
 
 ## Commit changes to database
 - python3 manage.py db upgrade
+
+## api endpoints
+- /api/register
+- /api/login
