@@ -2,6 +2,7 @@ from backend.models import UserModel
 from flask_restx import Resource, abort
 from flask import request
 import jwt
+
 import re
 import datetime
 import functools
@@ -90,6 +91,6 @@ class Login(Resource):
             exp = datetime.datetime.utcnow() + datetime.timedelta(hours=app.config['TOKEN_EXPIRE_HOURS'])
             encoded = jwt.encode({'email': email,'userid':user.id, 'exp': exp}, app.config['SECRET_KEY'], algorithm='HS256')
 
-            return { 'message':'successful login', 'email': email, 'token': encoded.decode('utf-8'),'status':200}
+            return { 'message':'successful login', 'email': email, 'token': encoded,'status':200}
         else:
             return {"message":"Unauthorized user", "status":400}
