@@ -16,6 +16,11 @@ class Config:
     DEBUG = False
     TOKEN_EXPIRE_HOURS = (24 * 365)
 
+    MAIL_SERVER = 'localhost'
+    MAIL_PORT = 1025
+    MAIL_USERNAME = 'customersupport@demo.com'
+    MAIL_PASSWORD = ''
+
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = postgres_local_base
     DEBUG = True
