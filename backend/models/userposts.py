@@ -10,5 +10,6 @@ class UserpostsModel(BaseClass, db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     post = db.Column(db.String(255))
 
-    def __init__(self, post):
+    def __init__(self, user_id, post):
         self.post = post
+        self.user_id = user_id

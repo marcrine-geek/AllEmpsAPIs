@@ -6,12 +6,19 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
 from backend.models import UserModel
-from flask_restx import Api,fields
-from authroute.auth import api as usersReg
-from authroute.auth import api2 as authUser
+from backend.models import UserpostsModel
 
-from authroute.auth import Register, Login, login_required
-from authroute.resetPassword import reset_password_namespace
+from flask_restx import Api,fields
+from routes.routes import api as usersReg
+from routes.routes import api2 as authUser
+
+from routes.routes import Register, Login, login_required
+from routes.resetPassword import reset_password_namespace
+from flask import request
+
+from utils.dto import UserDto
+
+user = UserDto.user
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -41,11 +48,6 @@ def hello():
 @login_required
 def update():
     return "success"
-
-@app.route('/add/general/posts', methods=['POST'])
-@login_required
-def genposts():
-    return "added"
 
 @app.route('/all/users/posts', methods=['GET'])
 @login_required
@@ -108,4 +110,4 @@ def followers():
     return "followers"
     
 if __name__ == '__main__':    
-    app.run()
+    app.run(port=5001)

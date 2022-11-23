@@ -1,4 +1,6 @@
 from backend.models import UserModel
+from backend.models import UserpostsModel
+from backend.models import ChannelsModel
 from flask_restx import Resource, abort
 from flask import request
 import jwt
@@ -94,3 +96,29 @@ class Login(Resource):
             return { 'message':'successful login', 'email': email, 'token': encoded,'status':200}
         else:
             return {"message":"Unauthorized user", "status":400}
+
+# post messages in general channel
+@api.route('/add/general/posts')
+class GenPosts(Resource):
+    @login_required
+    def post(self, user):
+        
+        post = request.json['post']
+        record = UserpostsModel(post=post, user_id = user.id)
+        
+        db.session.add(record) 
+        db.session.commit() 
+        
+        return {"message":"Message sent successfully"}, 200
+
+# add channels
+@api.route('/add/channel')
+class Channels(Resource):
+    def post(self):
+        channel_name = request.json['channel_name']
+        channel = ChannelsModel(channel_name=channel_name)
+
+        db.session.add(channel)
+        db.session.commit()
+
+        return {"message":"channel added successfully"}

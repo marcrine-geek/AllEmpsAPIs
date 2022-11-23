@@ -35,3 +35,4 @@ Endpoints for allemps apllication
 ## api endpoints
 - /api/register
 - /api/login
+- /api/add/general/posts

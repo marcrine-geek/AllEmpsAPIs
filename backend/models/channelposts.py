@@ -10,5 +10,6 @@ class ChannelpostsModel(BaseClass, db.Model):
     channel_id = db.Column(db.Integer, db.ForeignKey('channels.id'))
     post = db.Column(db.String(255))
 
-    def __init__(self, post):
+    def __init__(self, channel_id, post):
+        self.channel_id = channel_id
         self.post = post
