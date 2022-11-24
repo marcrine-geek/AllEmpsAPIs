@@ -36,3 +36,13 @@ Endpoints for allemps apllication
 - /api/register
 - /api/login
 - /api/add/general/posts
+- /add/channel
+- /all/channels
+
+
+Flask==2.0.0
+Flask-Cors==3.0.10
+Flask-Migrate==2.5.2
+flask-restx==0.4.0
+Flask-Script==2.0.6
+Flask-SQLAlchemy==2.5.1

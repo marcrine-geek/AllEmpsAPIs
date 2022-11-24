@@ -122,3 +122,19 @@ class Channels(Resource):
         db.session.commit()
 
         return {"message":"channel added successfully"}
+
+# get all channels
+@api.route('/all/channels')
+class AllChannels(Resource):
+    def post(self):
+        channels = db.session.query(ChannelsModel).all()
+        if channels is None:
+            return {'message':'No channels'}
+
+        else:
+            channel_store =[]
+            for i in channels:
+                channel_store.append(i.channel_name)
+            
+            
+            return {"message": "chat inputs fetched successfully", "data":channel_store}, 200

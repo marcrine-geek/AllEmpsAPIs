@@ -64,11 +64,6 @@ def update_post():
 def delete_post():
     return "post deleted"
 
-@app.route('/all/channels', methods=['GET'])
-@login_required
-def all_channels():
-    return "channels"
-
 @app.route('/add/member/to/channel', methods=['POST'])
 @login_required
 def join_channel():
@@ -110,4 +105,4 @@ def followers():
     return "followers"
     
 if __name__ == '__main__':    
-    app.run(port=5001)
+    app.run()
