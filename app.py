@@ -89,20 +89,10 @@ def upload_file():
 def upload_image():
     return "image upload"
 
-@app.route('/follow', methods=['POST'])
-@login_required
-def follow():
-    return "follow member"
-
 @app.route('/unfollow', methods=['DELETE'])
 @login_required
 def unfollow():
     return "unfollow member"
-
-@app.route('/followers', methods=['GET'])
-@login_required
-def followers():
-    return "followers"
     
 if __name__ == '__main__':    
     app.run()

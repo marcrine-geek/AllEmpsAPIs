@@ -1,6 +1,7 @@
 from backend.models import UserModel
 from backend.models import UserpostsModel
 from backend.models import ChannelsModel
+from backend.models import FollowersModel
 from flask_restx import Resource, abort
 from flask import request
 import jwt
@@ -126,6 +127,7 @@ class Channels(Resource):
 # get all channels
 @api.route('/all/channels')
 class AllChannels(Resource):
+    @login_required
     def post(self):
         channels = db.session.query(ChannelsModel).all()
         if channels is None:
@@ -138,3 +140,35 @@ class AllChannels(Resource):
             
             
             return {"message": "chat inputs fetched successfully", "data":channel_store}, 200
+
+# followers
+# not tested yet 
+@api.route('/follow')
+class Follow(Resource):
+    @login_required
+    def post(self, user):
+        record = FollowersModel(user_id = user.id)
+        
+        db.session.add(record) 
+        db.session.commit() 
+        
+        return {"message":"Following user"}, 200
+
+# get followers
+# needs editing
+@api.route('/all/followers')
+class Follow(Resource):
+    @login_required
+    def post(self, user):
+        followers = db.session.query(FollowersModel).all()
+        
+        if followers is None:
+            return {'message':'No followers'}
+
+        else:
+            followers_store =[]
+            for i in followers:
+                followers_store.append(i.user_firstname)
+
+        return {"message":"Following user"}, 200
+
