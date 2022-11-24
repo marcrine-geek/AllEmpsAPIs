@@ -1,3 +1,4 @@
+from tkinter.messagebox import NO
 from backend.models import UserModel
 from backend.models import UserpostsModel
 from backend.models import ChannelsModel
@@ -111,6 +112,21 @@ class GenPosts(Resource):
         db.session.commit() 
         
         return {"message":"Message sent successfully"}, 200
+#get all user's posts
+@api.route('/all/user/posts')
+class UserPosts(Resource):
+    @login_required
+    def post(self):
+        posts = db.session.query(UserpostsModel).all()
+
+        if posts is None:
+            return {"message":"no posts"}
+        else:
+            posts_store=[]
+            for i in posts:
+                posts_store.append(i.post)
+
+            return {"message": "all posts", "data":posts_store}, 200
 
 # add channels
 @api.route('/add/channel')
@@ -143,7 +159,7 @@ class AllChannels(Resource):
 
 # followers
 # not tested yet 
-@api.route('/follow')
+@api.route('/follow/user')
 class Follow(Resource):
     @login_required
     def post(self, user):

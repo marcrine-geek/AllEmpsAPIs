@@ -38,6 +38,8 @@ Endpoints for allemps apllication
 - /api/add/general/posts
 - /add/channel
 - /all/channels
+- /follow/user
+- /all/followers
 
 
 Flask==2.0.0
