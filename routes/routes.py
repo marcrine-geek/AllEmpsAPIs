@@ -3,6 +3,7 @@ from backend.models import UserModel
 from backend.models import UserpostsModel
 from backend.models import ChannelsModel
 from backend.models import FollowersModel
+from backend.models import CmembersModel
 from flask_restx import Resource, abort
 from flask import request
 import jwt
@@ -186,5 +187,33 @@ class Follow(Resource):
             for i in followers:
                 followers_store.append(i.user_firstname)
 
-        return {"message":"Following user"}, 200
+        return {"message":"Following user", "data":followers_store}, 200
 
+# channel members
+@api.route('/join/channel')
+class Members(Resource):
+    @login_required
+    def post(self, user):
+        members = CmembersModel(user_id = user.id)
+
+        db.session.add(members)
+        db.session.commit()
+
+        return {"message":"member added successfully"}, 200
+
+# get all members in a channel
+@api.route('/all/members')
+class AllMembers(Resource):
+    @login_required
+    def post(self):
+        members = db.session.query(CmembersModel).all()
+
+        if members is None:
+            return {"message":"no members"}
+
+        else:
+            members_store=[]
+            for i in members:
+                members_store.append(i.user_firstname)
+
+            return {"message":"members in the channel", "data":members_store}, 200
