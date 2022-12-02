@@ -2,7 +2,6 @@ from tkinter.messagebox import NO
 from backend.models import UserModel
 from backend.models import UserpostsModel
 from backend.models import ChannelsModel
-from backend.models import FollowersModel
 from backend.models import CmembersModel
 from flask_restx import Resource, abort
 from flask import request
@@ -113,6 +112,35 @@ class GenPosts(Resource):
         db.session.commit() 
         
         return {"message":"Message sent successfully"}, 200
+
+# users can follow other users 
+@api.route('/follow')
+class Follow(Resource):
+    @login_required
+    def post(self, user):
+        username = request.json['username']
+        followed_user = UserModel.query.filter_by(username=username).first()
+        if followed_user is None:
+            return {"message":"User not found"}, 400
+        user.follow(followed_user)
+        db.session.commit()
+        return {"message":"followed successfully"}, 200
+
+#unfollow a user
+@api.route('/unfollow')
+class UnFollow(Resource):
+    @login_required
+    def post(self, user):
+        username = request.json['username']
+        followed_user = UserModel.query.filter_by(username=username).first()
+        if followed_user is None:
+            return {"message":"User not found"}, 400
+        user.unfollow(followed_user)
+        db.session.commit()
+        return {"message":"Unfollowed successfully"}, 200
+
+# get followers
+
 #get all user's posts
 @api.route('/all/user/posts')
 class UserPosts(Resource):
@@ -130,6 +158,7 @@ class UserPosts(Resource):
             return {"message": "all posts", "data":posts_store}, 200
 
 # add channels
+# admin can add a channel
 @api.route('/add/channel')
 class Channels(Resource):
     def post(self):
@@ -142,6 +171,7 @@ class Channels(Resource):
         return {"message":"channel added successfully"}
 
 # get all channels
+# logged in users can view all channels
 @api.route('/all/channels')
 class AllChannels(Resource):
     @login_required
@@ -157,37 +187,6 @@ class AllChannels(Resource):
             
             
             return {"message": "chat inputs fetched successfully", "data":channel_store}, 200
-
-# followers
-# not tested yet 
-@api.route('/follow/user')
-class Follow(Resource):
-    @login_required
-    def post(self, user):
-        record = FollowersModel(user_id = user.id)
-        
-        db.session.add(record) 
-        db.session.commit() 
-        
-        return {"message":"Following user"}, 200
-
-# get followers
-# needs editing
-@api.route('/all/followers')
-class Follow(Resource):
-    @login_required
-    def post(self, user):
-        followers = db.session.query(FollowersModel).all()
-        
-        if followers is None:
-            return {'message':'No followers'}
-
-        else:
-            followers_store =[]
-            for i in followers:
-                followers_store.append(i.user_firstname)
-
-        return {"message":"Following user", "data":followers_store}, 200
 
 # channel members
 @api.route('/join/channel')

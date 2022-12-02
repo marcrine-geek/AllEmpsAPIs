@@ -3,7 +3,7 @@ import os
 postgres_local_base = 'postgresql+psycopg2://{user}:{password}@{host}:{port}/{db_name}'.format(
         user=os.environ.get('FLASK_DATABASE_USER', 'allemps'),
         password=os.environ.get('FLASK_DATABASE_PASSWORD', 'allemps'),
-        host=os.environ.get('FLASK_DATABASE_HOST', '54.157.189.162'),
+        host=os.environ.get('FLASK_DATABASE_HOST', '127.0.0.1'),
         port=os.environ.get('FLASK_DATABASE_PORT', 5432),
         db_name=os.environ.get('FLASK_DATABASE_NAME', 'allemps'),
     )
