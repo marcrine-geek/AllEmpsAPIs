@@ -36,10 +36,10 @@ Endpoints for allemps apllication
 - /api/register
 - /api/login
 - /api/add/general/posts
-- /add/channel
+- /api/add/channel
 - /all/channels
-- /follow/user
-- /all/followers
+- /api/follow/user
+- /api/unfollow/user
 
 
 Flask==2.0.0
