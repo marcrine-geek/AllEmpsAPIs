@@ -114,7 +114,7 @@ class GenPosts(Resource):
         return {"message":"Message sent successfully"}, 200
 
 # users can follow other users 
-@api.route('/follow')
+@api.route('/follow/user')
 class Follow(Resource):
     @login_required
     def post(self, user):
@@ -127,7 +127,7 @@ class Follow(Resource):
         return {"message":"followed successfully"}, 200
 
 #unfollow a user
-@api.route('/unfollow')
+@api.route('/unfollow/user')
 class UnFollow(Resource):
     @login_required
     def post(self, user):
