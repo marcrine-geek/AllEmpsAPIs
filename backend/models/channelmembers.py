@@ -8,4 +8,3 @@ class CmembersModel(BaseClass, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    member = db.Column(db.Boolean, default=False, nullable=False)

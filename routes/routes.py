@@ -145,22 +145,27 @@ class UnFollow(Resource):
 @api.route('/all/user/posts')
 class UserPosts(Resource):
     @login_required
-    def post(self):
-        posts = db.session.query(UserpostsModel).all()
-
-        if posts is None:
-            return {"message":"no posts"}
+    def post(self, user):
+        user_details = UserpostsModel.query.filter_by(user_id=user.id).first()
+        if user_details is None:
+            return {"message":"please log in"}
         else:
-            posts_store=[]
-            for i in posts:
-                posts_store.append(i.post)
+            posts = db.session.query(UserpostsModel).filter_by(user_id=user.id).all()
 
-            return {"message": "all posts", "data":posts_store}, 200
+            if posts is None:
+                return {"message":"no posts"}
+            else:
+                posts_store=[]
+                for i in posts:
+                    posts_store.append(i.post)
+
+                return {"message": "all posts", "data":posts_store}, 200
 
 # add channels
 # admin can add a channel
 @api.route('/add/channel')
 class Channels(Resource):
+    # @login_required
     def post(self):
         channel_name = request.json['channel_name']
         channel = ChannelsModel(channel_name=channel_name)
@@ -174,7 +179,7 @@ class Channels(Resource):
 # logged in users can view all channels
 @api.route('/all/channels')
 class AllChannels(Resource):
-    @login_required
+    # @login_required
     def post(self):
         channels = db.session.query(ChannelsModel).all()
         if channels is None:
@@ -201,11 +206,11 @@ class Members(Resource):
         return {"message":"member added successfully"}, 200
 
 # get all members in a channel
-@api.route('/all/members')
+@api.route('/all/channel/members')
 class AllMembers(Resource):
     @login_required
-    def post(self):
-        members = db.session.query(CmembersModel).all()
+    def post(self, user):
+        members = db.session.query(CmembersModel).filter_by(user_id=user.id).all()
 
         if members is None:
             return {"message":"no members"}
@@ -213,6 +218,6 @@ class AllMembers(Resource):
         else:
             members_store=[]
             for i in members:
-                members_store.append(i.user_firstname)
+                members_store.append(i.user_id)
 
             return {"message":"members in the channel", "data":members_store}, 200
