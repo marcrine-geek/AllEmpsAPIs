@@ -1,6 +1,9 @@
 # AllEmpsAPIs
 Endpoints for allemps apllication
 
+# Deployed API
+https://allempservice.onrender.com
+
 ## flask setup
 - install virtual environment
     pip3 install virtualenv
