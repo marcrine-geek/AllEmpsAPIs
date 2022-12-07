@@ -116,6 +116,8 @@ class UserDetails(Resource):
         else:
             details=[]
             for i in user:
+                x = i.__dict__
+                print(x)
                 details.append(i.firstname)
                 details.append(i.lastname)
                 details.append(i.username)

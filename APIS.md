@@ -237,3 +237,8 @@ response status 400
     "message":"user not authorized",
     "status":400
 }
+```
+
+# POST
+## file or image upload endpoint
+`/fileupload`
