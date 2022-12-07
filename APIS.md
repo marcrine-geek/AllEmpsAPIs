@@ -1,4 +1,5 @@
 ## api endpoints
+## register
 `/api/register`
 
 ```json
@@ -27,13 +28,152 @@ response status 400
 }
 ```
 
+## login
+`/api/ogin`
+```json
+requires
+{
+    "email":string,
+    "password":string
+}
+```
+```json
+response status 200
+{
+    "message": "successful login",
+    "email": "marc@gmail.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hcmNAZ21haWwuY29tIiwidXNlcmlkIjo2LCJleHAiOjE3MDE5NDA3NTl9.hry3Xzex7s6pPmkrBlfbcyGeTEBiPWz43CFr3Yebll4",
+    "status": 200
+}
+```
+```json
+response status 400
+{
+    "message": "Unauthorized user",
+    "status": 400
+}
+```
 
-- /api/login
-- /api/add/general/posts
+## general posts
+`/api/add/general/posts`
+```json
+requires
+{
+    "post":string
+}
+```
+```json 
+response status 200
+{
+    "message":"Message sent successfully",
+    "status":200
+}
+```
+
+## follow user
+`/api/follow/user`
+```json
+requires username as a parameter
+{
+    "username":string
+}
+```
+```json
+response status 200
+{
+    "message":"followed successfully",
+    "status":200
+}
+```
+```json
+response status 400
+{
+    "message":"User not found",
+    "status":400
+}
+```
+
+## unfollow user
+`/api/unfollow/user`
+```json
+requires username as a parameter
+{
+    "username":string
+}
+```
+```json
+response status 200
+{
+    "message":"Unfollowed successfully",
+    "status":200
+}
+```
+```json
+response status 400
+{
+    "message":"User not found",
+    "status":400
+}
+```
+
+## all user's posts
+`/api/all/user/posts`
+```json
+requires
+{
+    "user_id":int
+}
+```
+```json
+response status 200
+{
+    "message": "all posts", 
+    "data":[]
+}
+```
+```json
+response status 200 when user has no posts
+{
+    "message":"no posts"
+}
+```
+```json
+response status 400
+{
+    "message":"please log in"
+}
+```
+
+## join channel
+`/api/join/channel`
+```json
+requires
+{
+    "user_id":int
+}
+```
+```json
+response status 200
+{
+    "message":"member added successfully"
+}
+```
+
+## channel members
+`/api/all/channel/members`
+```json
+requires
+{
+    "user_id":int
+}
+```
+```json
+response status
+{
+    "message":"members in the channel", 
+    "data":[]
+}
+```
+
 - /api/add/channel
 - /all/channels
-- /api/follow/user
-- /api/unfollow/user
-- /api/all/user/posts
-- /api/join/channel
-- /api/all/channel/members

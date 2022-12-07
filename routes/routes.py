@@ -72,7 +72,7 @@ class Register(Resource):
 
             return {'email': email,'message':'user registered successfully','status':200}
         else:
-            return {"message":"Unauthorized user", "status":400}
+            return {"message":"User already exists", "status":400}
 
 
 api2 = AuthDto.api
@@ -148,12 +148,12 @@ class UserPosts(Resource):
     def post(self, user):
         user_details = UserpostsModel.query.filter_by(user_id=user.id).first()
         if user_details is None:
-            return {"message":"please log in"}
+            return {"message":"please log in"}, 400
         else:
             posts = db.session.query(UserpostsModel).filter_by(user_id=user.id).all()
 
             if posts is None:
-                return {"message":"no posts"}
+                return {"message":"no posts"}, 200
             else:
                 posts_store=[]
                 for i in posts:
@@ -191,7 +191,7 @@ class AllChannels(Resource):
                 channel_store.append(i.channel_name)
             
             
-            return {"message": "chat inputs fetched successfully", "data":channel_store}, 200
+            return {"message": "channels", "data":channel_store}, 200
 
 # channel members
 @api.route('/join/channel')
