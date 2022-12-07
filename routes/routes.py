@@ -104,6 +104,24 @@ class Login(Resource):
             return { 'message':'successful login', 'email': email, 'token': encoded,'status':200}
         else:
             return {"message":"Unauthorized user", "status":400}
+# get user details and update
+@api.route('/user/details')
+class UserDetails(Resource):
+    @login_required
+    def get(self, user):
+        user = UserModel.query.filter_by(id=user.id).all()
+        print(user)
+        if user is None:
+            return {"message":"user not authorized"}, 400
+        else:
+            details=[]
+            for i in user:
+                details.append(i.firstname)
+                details.append(i.lastname)
+                details.append(i.username)
+                details.append(i.email)
+
+            return {"message":"user details", "data":details}, 200
 
 # post messages in channels
 @api.route('/add/post')
@@ -211,6 +229,7 @@ class Members(Resource):
 class AllMembers(Resource):
     @login_required
     def get(self, user):
+        
         members = db.session.query(CmembersModel).filter_by(user_id=user.id).all()
 
         if members is None:

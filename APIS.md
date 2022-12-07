@@ -215,3 +215,25 @@ response status 200
 }
 ```
 
+# GET
+## User details
+`/api/user/details`
+```json
+response status 200
+{
+    "message": "user details",
+    "data": [
+        "firstname",
+        "lastname",
+        "username",
+        "email"
+    ],
+    "status":200
+}
+```
+```json
+response status 400
+{
+    "message":"user not authorized",
+    "status":400
+}
