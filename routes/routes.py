@@ -1,5 +1,5 @@
 from tkinter.messagebox import NO
-from backend.models import UserModel
+from backend.models import UserModel, channels
 from backend.models import UserpostsModel
 from backend.models import ChannelsModel
 from backend.models import CmembersModel
@@ -70,6 +70,12 @@ class Register(Resource):
                 db.session.add(user)
                 db.session.commit()
 
+                channel = 'General'
+                members = CmembersModel(user_id = user.id, channel_name = channel)
+
+                db.session.add(members)
+                db.session.commit()
+
             return {'email': email,'message':'user registered successfully','status':200}
         else:
             return {"message":"User already exists", "status":400}
@@ -99,53 +105,48 @@ class Login(Resource):
         else:
             return {"message":"Unauthorized user", "status":400}
 
-# post messages in general channel
-@api.route('/add/general/posts')
-class GenPosts(Resource):
+# post messages in channels
+@api.route('/add/post')
+class AddPosts(Resource):
     @login_required
     def post(self, user):
         
         post = request.json['post']
-        record = UserpostsModel(post=post, user_id = user.id)
+        channel_id = request.json['channel_id']
+
+        record = UserpostsModel(post=post, user_id = user.id, channel_id=channel_id)
         
         db.session.add(record) 
         db.session.commit() 
         
         return {"message":"Message sent successfully"}, 200
 
-# users can follow other users 
-@api.route('/follow/user')
-class Follow(Resource):
-    @login_required
-    def post(self, user):
-        username = request.json['username']
-        followed_user = UserModel.query.filter_by(username=username).first()
-        if followed_user is None:
-            return {"message":"User not found"}, 400
-        user.follow(followed_user)
-        db.session.commit()
-        return {"message":"followed successfully"}, 200
+#get specific channel's posts
+@api.route('/channel/posts')
+class ChannelPosts(Resource):
+    # @login_required
+    def get(self):
+        channel_id = request.json['channel_id']
+        allposts = UserpostsModel.query.filter_by(channel_id=channel_id).first()
+        if allposts is None:
+            return {"message":"there are no posts"}, 200
+        else:
+            posts = db.session.query(UserpostsModel).filter_by(channel_id=channel_id).all()
 
-#unfollow a user
-@api.route('/unfollow/user')
-class UnFollow(Resource):
-    @login_required
-    def post(self, user):
-        username = request.json['username']
-        followed_user = UserModel.query.filter_by(username=username).first()
-        if followed_user is None:
-            return {"message":"User not found"}, 400
-        user.unfollow(followed_user)
-        db.session.commit()
-        return {"message":"Unfollowed successfully"}, 200
+            if posts is None:
+                return {"message":"no posts"}, 200
+            else:
+                posts_store=[]
+                for i in posts:
+                    posts_store.append(i.post)
 
-# get followers
+                return {"message": "all posts", "data":posts_store}, 200
 
 #get all user's posts
 @api.route('/all/user/posts')
 class UserPosts(Resource):
     @login_required
-    def post(self, user):
+    def get(self, user):
         user_details = UserpostsModel.query.filter_by(user_id=user.id).first()
         if user_details is None:
             return {"message":"please log in"}, 400
@@ -180,7 +181,7 @@ class Channels(Resource):
 @api.route('/all/channels')
 class AllChannels(Resource):
     # @login_required
-    def post(self):
+    def get(self):
         channels = db.session.query(ChannelsModel).all()
         if channels is None:
             return {'message':'No channels'}
@@ -193,7 +194,7 @@ class AllChannels(Resource):
             
             return {"message": "channels", "data":channel_store}, 200
 
-# channel members
+# join channel 
 @api.route('/join/channel')
 class Members(Resource):
     @login_required
@@ -209,7 +210,7 @@ class Members(Resource):
 @api.route('/all/channel/members')
 class AllMembers(Resource):
     @login_required
-    def post(self, user):
+    def get(self, user):
         members = db.session.query(CmembersModel).filter_by(user_id=user.id).all()
 
         if members is None:
@@ -221,3 +222,29 @@ class AllMembers(Resource):
                 members_store.append(i.user_id)
 
             return {"message":"members in the channel", "data":members_store}, 200
+
+# users can follow other users 
+@api.route('/follow/user')
+class Follow(Resource):
+    @login_required
+    def post(self, user):
+        username = request.json['username']
+        followed_user = UserModel.query.filter_by(username=username).first()
+        if followed_user is None:
+            return {"message":"User not found"}, 400
+        user.follow(followed_user)
+        db.session.commit()
+        return {"message":"followed successfully"}, 200
+
+#unfollow a user
+@api.route('/unfollow/user')
+class UnFollow(Resource):
+    @login_required
+    def post(self, user):
+        username = request.json['username']
+        followed_user = UserModel.query.filter_by(username=username).first()
+        if followed_user is None:
+            return {"message":"User not found"}, 400
+        user.unfollow(followed_user)
+        db.session.commit()
+        return {"message":"Unfollowed successfully"}, 200

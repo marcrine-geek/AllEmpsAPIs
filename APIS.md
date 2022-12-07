@@ -1,4 +1,6 @@
 ## api endpoints
+
+# POST
 ## register
 `/api/register`
 
@@ -28,6 +30,7 @@ response status 400
 }
 ```
 
+# POST
 ## login
 `/api/ogin`
 ```json
@@ -54,12 +57,14 @@ response status 400
 }
 ```
 
-## general posts
-`/api/add/general/posts`
+# POST
+## add posts
+`/api/add/post`
 ```json
 requires
 {
-    "post":string
+    "post":string,
+    "channel_id":int
 }
 ```
 ```json 
@@ -70,6 +75,32 @@ response status 200
 }
 ```
 
+# GET
+## get all posts in specific channels
+`/api/channel/posts`
+```json
+requires
+{
+    "channel_id":int
+}
+```
+```json
+response status 200
+{
+    "message": "all posts", 
+    "data":[],
+    "status":200
+}
+```
+```json
+response status 200
+{
+    "message":"there are no posts",
+    "status":200
+}
+```
+
+# POST
 ## follow user
 `/api/follow/user`
 ```json
@@ -93,6 +124,7 @@ response status 400
 }
 ```
 
+# POST
 ## unfollow user
 `/api/unfollow/user`
 ```json
@@ -116,6 +148,7 @@ response status 400
 }
 ```
 
+# GET
 ## all user's posts
 `/api/all/user/posts`
 ```json
@@ -128,22 +161,26 @@ requires
 response status 200
 {
     "message": "all posts", 
-    "data":[]
+    "data":[],
+    "status":200
 }
 ```
 ```json
 response status 200 when user has no posts
 {
-    "message":"no posts"
+    "message":"no posts",
+    "status":200
 }
 ```
 ```json
 response status 400
 {
-    "message":"please log in"
+    "message":"please log in",
+    "status":400
 }
 ```
 
+# POST
 ## join channel
 `/api/join/channel`
 ```json
@@ -155,10 +192,12 @@ requires
 ```json
 response status 200
 {
-    "message":"member added successfully"
+    "message":"member added successfully",
+    "status":200
 }
 ```
 
+# GET
 ## channel members
 `/api/all/channel/members`
 ```json
@@ -168,12 +207,11 @@ requires
 }
 ```
 ```json
-response status
+response status 200
 {
     "message":"members in the channel", 
-    "data":[]
+    "data":[],
+    "status":200
 }
 ```
 
-- /api/add/channel
-- /all/channels
