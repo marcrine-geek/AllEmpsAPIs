@@ -104,6 +104,7 @@ class Login(Resource):
             return { 'message':'successful login', 'email': email, 'token': encoded,'status':200}
         else:
             return {"message":"Unauthorized user", "status":400}
+
 # get user details and update
 @api.route('/user/details')
 class UserDetails(Resource):
@@ -209,9 +210,11 @@ class AllChannels(Resource):
         else:
             channel_store =[]
             for i in channels:
-                channel_store.append(i.channel_name)
-            
-            
+                channel_store.append([
+                    i.id,
+                    i.channel_name
+                ])
+               
             return {"message": "channels", "data":channel_store}, 200
 
 # join channel 

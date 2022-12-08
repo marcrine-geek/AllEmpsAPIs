@@ -242,3 +242,15 @@ response status 400
 # POST
 ## file or image upload endpoint
 `/fileupload`
+
+
+# GET
+## get all channels
+`/api/all/channels`
+```json
+response status 200
+{
+    "message":"channels",
+    "data":[],
+    "status":200
+}
