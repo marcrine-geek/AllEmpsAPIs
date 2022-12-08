@@ -248,6 +248,12 @@ response status 400
 ## get all channels
 `/api/all/channels`
 ```json
+requirements
+{
+    "channel_id"
+}
+```
+```json
 response status 200
 {
     "message":"channels",

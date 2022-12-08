@@ -117,13 +117,13 @@ class UserDetails(Resource):
         else:
             details=[]
             for i in user:
-                x = i.__dict__
-                print(x)
-                details.append(i.firstname)
-                details.append(i.lastname)
-                details.append(i.username)
-                details.append(i.email)
-
+                details.append([
+                    i.firstname,
+                    i.lastname,
+                    i.username,
+                    i.email
+                ])
+                
             return {"message":"user details", "data":details}, 200
 
 # post messages in channels
@@ -147,7 +147,7 @@ class AddPosts(Resource):
 class ChannelPosts(Resource):
     # @login_required
     def get(self):
-        channel_id = request.json['channel_id']
+        channel_id = request.args.get('channel_id')
         allposts = UserpostsModel.query.filter_by(channel_id=channel_id).first()
         if allposts is None:
             return {"message":"there are no posts"}, 200
@@ -179,7 +179,10 @@ class UserPosts(Resource):
             else:
                 posts_store=[]
                 for i in posts:
-                    posts_store.append(i.post)
+                    posts_store.append([
+                        i.user_id,
+                        i.post
+                    ])
 
                 return {"message": "all posts", "data":posts_store}, 200
 
@@ -243,6 +246,7 @@ class AllMembers(Resource):
         else:
             members_store=[]
             for i in members:
+                
                 members_store.append(i.user_id)
 
             return {"message":"members in the channel", "data":members_store}, 200
