@@ -147,17 +147,16 @@ class AddPosts(Resource):
 class ChannelPosts(Resource):
     # @login_required
     def get(self):
-        channel_id = request.args.get('channel_id')
-        allposts = UserpostsModel.query.filter_by(channel_id=channel_id).first()
-        if allposts is None:
-            return {"message":"there are no posts"}, 200
+        channel_id = request.args.get('id')
+        channels = ChannelsModel.query.filter_by(id=channel_id).first()
+        if channels is None:
+            return {"message":"That channel does not exist"}, 400
         else:
             posts = db.session.query(UserpostsModel).filter_by(channel_id=channel_id).all()
-
+            posts_store=[]
             if posts is None:
                 return {"message":"no posts"}, 200
             else:
-                posts_store=[]
                 for i in posts:
                     posts_store.append(i.post)
 

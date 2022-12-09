@@ -250,13 +250,21 @@ response status 400
 ```json
 requirements
 {
-    "channel_id"
+    "request.args.get('id')"
 }
 ```
 ```json
 response status 200
 {
-    "message":"channels",
+    "message": "all posts",
     "data":[],
     "status":200
 }
+```
+```json
+response status 400
+{
+    "message":"That channel does not exist",
+    "status":400
+}
+```
