@@ -216,8 +216,10 @@ class AllChannels(Resource):
                     i.id,
                     i.channel_name
                 ])
-               
-            return {"message": "channels", "data":channel_store}, 200
+            print(channel_store)
+            strings = json.dumps(channel_store)
+            print(strings)
+            return {"message": "channels", "data":strings}, 200
 
 # join channel 
 @api.route('/join/channel')
