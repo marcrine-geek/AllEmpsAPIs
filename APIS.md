@@ -187,11 +187,12 @@ response status 400
 # POST
 ## join channel
 ### requires token
+#### tested
 `/api/join/channel`
 ```json
 requires
 {
-    "user_id":int
+    "channel_name": string
 }
 ```
 ```json
@@ -205,11 +206,12 @@ response status 200
 # GET
 ## channel members
 ### requires token
+#### tested
 `/api/all/channel/members`
 ```json
-requires
+requires query parameter
 {
-    "user_id":int
+    "channel_name = request.args.get('channel_name')"
 }
 ```
 ```json
