@@ -10,6 +10,7 @@ class UserpostsModel(BaseClass, db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     post = db.Column(db.String(255))
     channel_id = db.Column(db.Integer, db.ForeignKey('channels.id'))
+    timestamp = db.Column(db.DateTime, nullable=False)
 
     def __init__(self, user_id, post, channel_id):
         self.post = post

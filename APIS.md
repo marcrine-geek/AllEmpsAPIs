@@ -59,6 +59,7 @@ response status 400
 
 # POST
 ## add posts
+### requires token
 `/api/add/post`
 ```json
 requires
@@ -79,9 +80,9 @@ response status 200
 ## get all posts in specific channels
 `/api/channel/posts`
 ```json
-requires
+requires query parameter id
 {
-    "channel_id":int
+    "channel_id = request.args.get('id')"
 }
 ```
 ```json
@@ -102,9 +103,10 @@ response status 200
 
 # POST
 ## follow user
+### requires token
 `/api/follow/user`
 ```json
-requires username as a parameter
+requires username
 {
     "username":string
 }
@@ -126,9 +128,10 @@ response status 400
 
 # POST
 ## unfollow user
+### requires token
 `/api/unfollow/user`
 ```json
-requires username as a parameter
+requires username
 {
     "username":string
 }
@@ -150,6 +153,7 @@ response status 400
 
 # GET
 ## all user's posts
+### requires token
 `/api/all/user/posts`
 ```json
 requires
@@ -182,6 +186,7 @@ response status 400
 
 # POST
 ## join channel
+### requires token
 `/api/join/channel`
 ```json
 requires
@@ -199,6 +204,7 @@ response status 200
 
 # GET
 ## channel members
+### requires token
 `/api/all/channel/members`
 ```json
 requires
@@ -217,6 +223,7 @@ response status 200
 
 # GET
 ## User details
+### requires token
 `/api/user/details`
 ```json
 response status 200

@@ -53,4 +53,4 @@ class UserModel(BaseClass, db.Model):
             followers, (followers.c.followed_id == UserpostsModel.user_id)).filter(
                 followers.c.follower_id == self.id)
         own = UserpostsModel.query.filter_by(user_id=self.id)
-        return followed.union(own)
+        return followed.union(own).order_by(UserpostsModel.timestamp.desc())
