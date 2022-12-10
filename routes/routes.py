@@ -148,7 +148,7 @@ class ChannelPosts(Resource):
             return {"message":"That channel does not exist"}, 400
         else:
             posts = db.session.query(UserpostsModel).filter_by(channel_id=channel_id).all()
-            posts_store=[]
+            
             if posts is None:
                 return {"message":"no posts"}, 200
             else:
@@ -215,7 +215,8 @@ class AllChannels(Resource):
 class Members(Resource):
     @login_required
     def post(self, user):
-        members = CmembersModel(user_id = user.id)
+        channel_name = request.json['channel_name']
+        members = CmembersModel(user_id = user.id, channel_name = channel_name)
 
         db.session.add(members)
         db.session.commit()
@@ -227,20 +228,21 @@ class Members(Resource):
 class AllMembers(Resource):
     @login_required
     def get(self, user):
-        
-        loggedin_user = db.session.query(CmembersModel).filter_by(user_id=user.id).all()
+        #check if channel exists
+        channel_name = request.args.get('channel_name')
 
-        if loggedin_user is None:
-            return {"message":"no members"}
+        members = db.session.query(CmembersModel).filter_by(channel_name=channel_name).all()
 
-        else:
-            members = db.session.query(CmembersModel).all()
+        if channels:
             
             cols = ['user_id', 'channel_name']
             
             result = [{col: getattr(d, col) for col in cols} for d in members]
             
             return jsonify(data=result)
+        
+        else:
+            return {"message":"channel does not exists"}
 
 # users can follow other users 
 @api.route('/follow/user')
