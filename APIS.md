@@ -2,6 +2,7 @@
 
 # POST
 ## register
+### tested
 `/api/register`
 
 ```json
@@ -32,6 +33,7 @@ response status 400
 
 # POST
 ## login
+### tested
 `/api/ogin`
 ```json
 requires
@@ -250,30 +252,20 @@ response status 400
 
 # POST
 ## file or image upload endpoint
+### tested
 `/fileupload`
 
 
 # GET
 ## get all channels
+### tested
 `/api/all/channels`
 ```json
-requirements
-{
-    "request.args.get('id')"
-}
-```
-```json
+no requirements
 response status 200
 {
     "message": "all posts",
     "data":[],
     "status":200
-}
-```
-```json
-response status 400
-{
-    "message":"That channel does not exist",
-    "status":400
 }
 ```
