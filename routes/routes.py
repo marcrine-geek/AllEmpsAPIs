@@ -1,10 +1,10 @@
 from tkinter.messagebox import NO
-from backend.models import UserModel, channels
+from backend.models import UserModel
 from backend.models import UserpostsModel
 from backend.models import ChannelsModel
 from backend.models import CmembersModel
 from flask_restx import Resource, abort
-from flask import request
+from flask import request, session
 import jwt
 
 import re
@@ -122,6 +122,7 @@ class UserDetails(Resource):
             return jsonify(data=result)
 
 # post messages in channels
+# completed
 @api.route('/add/post')
 class AddPosts(Resource):
     @login_required
@@ -129,15 +130,23 @@ class AddPosts(Resource):
         
         post = request.json['post']
         channel_id = request.json['channel_id']
+        channel_name = request.json['channel_name']
 
-        record = UserpostsModel(post=post, user_id = user.id, channel_id=channel_id)
+        member = db.session.query(CmembersModel).filter_by(channel_name=channel_name).all()
+        if member:
+
+            record = UserpostsModel(post=post, user_id = user.id, channel_id=channel_id)
         
-        db.session.add(record) 
-        db.session.commit() 
+            db.session.add(record) 
+            db.session.commit() 
         
-        return {"message":"Message sent successfully"}, 200
+            return {"message":"Message sent successfully"}, 200
+        
+        else:
+            return {"message":"Not allowed to send messages to this channel. Join channel first"}, 400
 
 #get specific channel's posts
+# complete
 @api.route('/channel/posts')
 class ChannelPosts(Resource):
     # @login_required
@@ -159,6 +168,7 @@ class ChannelPosts(Resource):
                 return jsonify(data=result)
 
 #get all user's posts
+# complete
 @api.route('/all/user/posts')
 class UserPosts(Resource):
     @login_required
@@ -201,7 +211,7 @@ class AllChannels(Resource):
         channels = db.session.query(ChannelsModel).all()
         
         if channels is None:
-            return {'message':'No channels'}
+            return {'message':'No channels'} 
 
         else:
             cols = ['id', 'channel_name']
@@ -233,7 +243,7 @@ class AllMembers(Resource):
 
         members = db.session.query(CmembersModel).filter_by(channel_name=channel_name).all()
 
-        if channels:
+        if members:
             
             cols = ['user_id', 'channel_name']
             
@@ -245,6 +255,7 @@ class AllMembers(Resource):
             return {"message":"channel does not exists"}
 
 # users can follow other users 
+# complete
 @api.route('/follow/user')
 class Follow(Resource):
     @login_required
@@ -258,6 +269,7 @@ class Follow(Resource):
         return {"message":"followed successfully"}, 200
 
 #unfollow a user
+# complete
 @api.route('/unfollow/user')
 class UnFollow(Resource):
     @login_required
@@ -270,15 +282,43 @@ class UnFollow(Resource):
         db.session.commit()
         return {"message":"Unfollowed successfully"}, 200
 
+# all followers
+# complete
+@api.route('/all/followers')
+class Followers(Resource):
+    @login_required
+    def get(self, user):
+        member = UserModel.query.filter_by(id=user.id).first()
+        if member:
+            x = user.allfollowers(member)
+            db.session.commit()
+            
+            cols = ['firstname', 'lastname']
+        
+            result = [{col: getattr(d, col) for col in cols} for d in x]
+        
+            return jsonify(followers=result)
+        
+        else:
+            return {"message":"user not found"}
+
 # get posts for all followed users by a user
+# complete
 @api.route('/followed/posts')
 class Follow(Resource):
     @login_required
     def get(self, user):
-        username = request.args.get('username')
-        following_user = UserModel.query.filter_by(username=username).first()
-        if following_user is None:
-            return {"message":"User not found"}, 400
-        user.followed_posts(following_user)
+        follower = UserModel.query.filter_by(id=user.id).first()
+        if follower is None:
+            return {"message":"user not found"}, 400
+        
+        x = user.followed_posts(follower)
         db.session.commit()
-        return {"message":"Users posts"}, 200
+
+        print(x)
+        cols = ['post']
+        
+        result = [{col: getattr(d, col) for col in cols} for d in x]
+    
+        return jsonify(posts=result)
+        

@@ -62,12 +62,14 @@ response status 400
 # POST
 ## add posts
 ### requires token
+### tested
 `/api/add/post`
 ```json
 requires
 {
     "post":string,
-    "channel_id":int
+    "channel_id":int,
+    "channel_name":string
 }
 ```
 ```json 
@@ -77,9 +79,17 @@ response status 200
     "status":200
 }
 ```
+```json 
+response status 400
+{
+    "message":"Not allowed to send messages to this channel. Join channel first",
+    "status":400
+}
+```
 
 # GET
 ## get all posts in specific channels
+### tested
 `/api/channel/posts`
 ```json
 requires query parameter id
@@ -96,16 +106,17 @@ response status 200
 }
 ```
 ```json
-response status 200
+response status 400
 {
-    "message":"there are no posts",
-    "status":200
+    "message":"That channel does not exist",
+    "status":400
 }
 ```
 
 # POST
 ## follow user
 ### requires token
+### tested
 `/api/follow/user`
 ```json
 requires username
@@ -131,6 +142,7 @@ response status 400
 # POST
 ## unfollow user
 ### requires token
+### tested
 `/api/unfollow/user`
 ```json
 requires username
@@ -156,14 +168,10 @@ response status 400
 # GET
 ## all user's posts
 ### requires token
+### tested
 `/api/all/user/posts`
 ```json
-requires
-{
-    "user_id":int
-}
-```
-```json
+requires token
 response status 200
 {
     "message": "all posts", 
@@ -267,5 +275,49 @@ response status 200
     "message": "all posts",
     "data":[],
     "status":200
+}
+```
+
+# GET
+## Get all followers
+### requires token
+### tested
+`/api/all/followers`
+```json
+requires tokens
+response status 200
+{
+    "message":"followers",
+    "data":["firstname", "lastname"],
+    "status":200
+}
+```
+```json
+response status 400
+{
+    "message":"user not found",
+    "status":400
+}
+```
+
+# GET
+## Get all posts for followed users
+### requires tokens
+### tested
+`/api/followed/posts`
+```json
+requires tokens
+response status 200
+{
+    "message":"posts",
+    "data":["post"],
+    "status":200
+}
+```
+```json
+response status 400
+{
+    "message":"user not found",
+    "status":400
 }
 ```

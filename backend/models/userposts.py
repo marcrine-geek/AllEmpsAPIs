@@ -13,6 +13,8 @@ class UserpostsModel(BaseClass, db.Model):
     timestamp = db.Column(db.DateTime, nullable=False)
 
     def __init__(self, user_id, post, channel_id):
+        now = datetime.now()
+        self.timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
         self.post = post
         self.user_id = user_id
         self.channel_id = channel_id

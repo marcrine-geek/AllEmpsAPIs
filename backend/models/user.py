@@ -39,6 +39,9 @@ class UserModel(BaseClass, db.Model):
     def follow(self, user):
         if not self.is_following(user):
             self.followed.append(user)
+    def allfollowers(self, user):
+        allfollowers = UserModel.query.join(followers, (followers.c.followed_id==UserModel.id)).filter(followers.c.follower_id == user.id).all()
+        return allfollowers
 
     def unfollow(self, user):
         if self.is_following(user):
@@ -48,9 +51,9 @@ class UserModel(BaseClass, db.Model):
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
 
-    def followed_posts(self):
-        followed = UserpostsModel.query.join(
+    def followed_posts(self, user):
+        posts_followed = UserpostsModel.query.join(
             followers, (followers.c.followed_id == UserpostsModel.user_id)).filter(
-                followers.c.follower_id == self.id)
-        own = UserpostsModel.query.filter_by(user_id=self.id)
-        return followed.union(own).order_by(UserpostsModel.timestamp.desc())
+                followers.c.follower_id == user.id).union(UserpostsModel.query.filter_by(user_id=user.id)).order_by(UserpostsModel.timestamp.desc()).all()
+    
+        return posts_followed
