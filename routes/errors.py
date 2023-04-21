@@ -30,5 +30,5 @@ class ExpiredTokenError(HTTPException):
 
 class UnauthorizedError(HTTPException):
     code = 401
-    description = "E-mail address or password is incorrect"
+    description = "Email address or password is incorrect"
     
