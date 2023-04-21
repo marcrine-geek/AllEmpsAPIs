@@ -1,11 +1,15 @@
-from tkinter.messagebox import NO
 from backend.models import UserModel
 from backend.models import UserpostsModel
 from backend.models import ChannelsModel
 from backend.models import CmembersModel
 from flask_restx import Resource, abort
 from flask import request, session
+from flask_jwt_extended import create_access_token, decode_token
 import jwt
+from flask import Flask
+from flask import current_app as app
+from config import DevelopmentConfig
+from flask_caching import Cache
 
 import re
 import datetime
@@ -17,10 +21,15 @@ import config
 from time import gmtime, strftime
 from db import db
 from flask import current_app as app
+from services.mail_service import send_email
 
 from utils.dto import UserDto
 from utils.dto import AuthDto
 import json
+
+app = Flask(__name__)
+app.config.from_object(DevelopmentConfig)
+cache = Cache(app)
 
 api = UserDto.api
 user = UserDto.user
@@ -43,6 +52,61 @@ def login_required(method):
         return method(self, user)
     return wrapper
 
+# forgot password
+@api.route('/forgot')
+class ForgotPassword(Resource):
+    def post(self):
+        url = request.host_url + 'reset/'
+
+        body = request.get_json()
+        email = body.get('email')
+        if not email:
+            return {"message": "wrong email"}
+
+        user = UserModel.query.filter_by(email=email).first()
+        if not user:
+            return {"message": "email does not exist"}
+
+        expires = datetime.timedelta(hours=24)
+        reset_token = create_access_token(
+            str(user.id), expires_delta=expires)
+
+        return send_email('[Adamur] Reset Your Password',
+                          sender='adamurtests@gmail.com',
+                          recipients=[user.email],
+                          text_body=render_template('email/reset_password.txt',
+                                                    url=url + reset_token),
+                          html_body=render_template('email/reset_password.html',
+                                                    url=url + reset_token))
+
+# reset password
+@api.route('/reset')
+class ResetPassword(Resource):
+    def post(self):
+        url = request.host_url + 'reset/'
+        body = request.get_json()
+        reset_token = body.get('reset_token')
+        password = body.get('password')
+
+        if not reset_token or not password:
+            return {"message": "an error occured"}
+
+        user_id = decode_token(reset_token)['sub']
+
+        print("+++++++++++", user_id)
+
+        user = UserModel.query.filter_by(id=user_id).first()
+
+        if user:
+            user.password = generate_password_hash(password)
+            db.session.add(user)
+            db.session.commit()
+
+            return send_email('[Adamur] Password reset successful',
+                              sender='adamurtests@gmail.com',
+                              recipients=[user.email],
+                              text_body='Password reset was successful',
+                              html_body='<p>Password reset was successful</p>')
 
 @api.route('/register')
 class Register(Resource):
