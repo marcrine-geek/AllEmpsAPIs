@@ -19,12 +19,12 @@ Endpoints for allemps apllication
 ## run the server
 `python3 app.py`
 ## additional requirements
-`pip install Flask==1.1.4`
-`pip install Flask psycopg2-binary`
-`pip install Flask-SQLAlchemy`
-`pip install Flask-Migrate==2.6.0`
-`pip install markupsafe==2.0.1`
-`pip freeze > requirements.txt`
+- `pip install Flask==1.1.4`
+- `pip install Flask psycopg2-binary`
+- `pip install Flask-SQLAlchemy`
+- `pip install Flask-Migrate==2.6.0`
+- `pip install markupsafe==2.0.1`
+- `pip freeze > requirements.txt`
 
 ## Database initialization
 `python3 manage.py db init`
@@ -36,9 +36,9 @@ Endpoints for allemps apllication
 `python3 manage.py db upgrade`
 
 
-Flask==2.0.0
-Flask-Cors==3.0.10
-Flask-Migrate==2.5.2
-flask-restx==0.4.0
-Flask-Script==2.0.6
-Flask-SQLAlchemy==2.5.1
+- Flask==2.0.0
+- Flask-Cors==3.0.10
+- Flask-Migrate==2.5.2
+- flask-restx==0.4.0
+- Flask-Script==2.0.6
+- Flask-SQLAlchemy==2.5.1
